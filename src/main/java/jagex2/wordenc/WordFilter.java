@@ -138,29 +138,7 @@ public class WordFilter {
 
 	@ObfuscatedName("qc.a(Ljava/lang/String;I)Ljava/lang/String;")
 	public static String filter(String arg0) {
-		long var2 = System.currentTimeMillis();
-		char[] var4 = arg0.toCharArray();
-		filterCharacters(var4);
-		String var6 = (new String(var4)).trim();
-		char[] var7 = var6.toLowerCase().toCharArray();
-		String var8 = var6.toLowerCase();
-		filterTld(var7);
-		filterBad(var7);
-		filterDomains(var7);
-		filterFragments(var7);
-		for (int var9 = 0; var9 < ALLOWLIST.length; var9++) {
-			int var10 = -1;
-			while ((var10 = var8.indexOf(ALLOWLIST[var9], var10 + 1)) != -1) {
-				char[] var11 = ALLOWLIST[var9].toCharArray();
-				for (int var12 = 0; var12 < var11.length; var12++) {
-					var7[var12 + var10] = var11[var12];
-				}
-			}
-		}
-		replaceUppercase(var6.toCharArray(), var7);
-		formatUppercase(var7);
-		long var13 = System.currentTimeMillis();
-		return (new String(var7)).trim();
+		return arg0;
 	}
 
 	@ObfuscatedName("qc.a([C[CI)V")
