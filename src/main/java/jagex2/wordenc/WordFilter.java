@@ -138,12 +138,32 @@ public class WordFilter {
 
 	@ObfuscatedName("sc.a(BLjava/lang/String;)Ljava/lang/String;")
 	public static String filter(String arg1) {
-		return arg1;
+		if (arg1 == null) {
+			return null;
+		}
+
+		char[] var2 = arg1.toLowerCase().toCharArray();
+		filterCharacters(var2);
+		filterBad(var2);
+		filterDomains(var2);
+		filterTld(var2);
+		filterFragments(var2);
+		formatUppercase(var2);
+
+		char[] var3 = arg1.toCharArray();
+		filterCharacters(var3);
+		for (int var4 = 0; var4 < var2.length; var4++) {
+			if (var2[var4] == '*') {
+				var3[var4] = '*';
+			}
+		}
+
+		replaceUppercase(arg1.toCharArray(), var3);
+		return new String(var3).trim();
 	}
 
-	@ObfuscatedName("sc.a(B[C[C)V")
 	public static void replaceUppercase(char[] arg1, char[] arg2) {
-		for (int var3 = 0; var3 < arg1.length; var3++) {
+		for (int var3 = 0; var3 < arg2.length; var3++) {
 			if (arg2[var3] != '*' && isUpperCase(arg1[var3])) {
 				arg2[var3] = arg1[var3];
 			}
@@ -509,14 +529,25 @@ public class WordFilter {
 		}
 	}
 
+	public static String filter(String arg1) {
+		return arg1;
+	}
+
+	public static void replaceUppercase(char[] arg1, char[] arg2) {
+		for (int var3 = 0; var3 < arg2.length; var3++) {
+			if (arg2[var3] != '*' && isUpperCase(arg1[var3])) {
+				arg2[var3] = arg1[var3];
+			}
+		}
+	}
+
 	@ObfuscatedName("sc.a([CB[[B[C)V")
-	public static void filter(char[] arg0, byte[][] arg2, char[] arg3) {
-		if (arg3.length > arg0.length) {
+	public static void filter(char[] arg1, byte[][] arg2, char[] arg3) {
+		if (arg3.length > arg1.length) {
 			return;
 		}
-		boolean var5 = true;
 		int var10;
-		for (int var6 = 0; var6 <= arg0.length - arg3.length; var6 += var10) {
+		for (int var6 = 0; var6 <= arg1.length - arg3.length; var6 += var10) {
 			int var7 = var6;
 			int var8 = 0;
 			int var9 = 0;
@@ -526,14 +557,13 @@ public class WordFilter {
 			boolean var13 = false;
 			label163: while (true) {
 				while (true) {
-					if (var7 >= arg0.length || var12 && var13) {
+					if (var7 >= arg1.length || var12 && var13) {
 						break label163;
 					}
-					boolean var14 = false;
-					char var15 = arg0[var7];
+					char var15 = arg1[var7];
 					char var16 = 0;
-					if (var7 + 1 < arg0.length) {
-						var16 = arg0[var7 + 1];
+					if (var7 + 1 < arg1.length) {
+						var16 = arg1[var7 + 1];
 					}
 					int var17;
 					if (var8 < arg3.length && (var17 = getEmulatedSize(arg3[var8], var16, var15)) > 0) {
@@ -579,10 +609,10 @@ public class WordFilter {
 				if (var11) {
 					boolean var24 = false;
 					boolean var25 = false;
-					if (var6 - 1 < 0 || isSymbol(arg0[var6 - 1]) && arg0[var6 - 1] != '\'') {
+					if (var6 - 1 < 0 || isSymbol(arg1[var6 - 1]) && arg1[var6 - 1] != '\'') {
 						var24 = true;
 					}
-					if (var7 >= arg0.length || isSymbol(arg0[var7]) && arg0[var7] != '\'') {
+					if (var7 >= arg1.length || isSymbol(arg1[var7]) && arg1[var7] != '\'') {
 						var25 = true;
 					}
 					if (!var24 || !var25) {
@@ -592,20 +622,13 @@ public class WordFilter {
 							var27 = var6;
 						}
 						while (!var26 && var27 < var7) {
-							if (var27 >= 0 && (!isSymbol(arg0[var27]) || arg0[var27] == '\'')) {
+							if (var27 >= 0 && (!isSymbol(arg1[var27]) || arg1[var27] == '\'')) {
 								char[] var28 = new char[3];
 								int var29;
-								for (var29 = 0; var29 < 3 && var27 + var29 < arg0.length && (!isSymbol(arg0[var27 + var29]) || arg0[var27 + var29] == '\''); var29++) {
-									var28[var29] = arg0[var27 + var29];
+								for (var29 = 0; var29 < 3 && var27 + var29 < arg1.length && (!isSymbol(arg1[var27 + var29]) || arg1[var27 + var29] == '\''); var29++) {
+									var28[var29] = arg1[var27 + var29];
 								}
-								boolean var30 = true;
-								if (var29 == 0) {
-									var30 = false;
-								}
-								if (var29 < 3 && var27 - 1 >= 0 && (!isSymbol(arg0[var27 - 1]) || arg0[var27 - 1] == '\'')) {
-									var30 = false;
-								}
-								if (var30 && !isBadFragment(var28)) {
+								if (var29 > 0 && !isBadFragment(var28)) {
 									var26 = true;
 								}
 							}
@@ -618,11 +641,11 @@ public class WordFilter {
 				} else {
 					char var20 = ' ';
 					if (var6 - 1 >= 0) {
-						var20 = arg0[var6 - 1];
+						var20 = arg1[var6 - 1];
 					}
 					char var21 = ' ';
-					if (var7 < arg0.length) {
-						var21 = arg0[var7];
+					if (var7 < arg1.length) {
+						var21 = arg1[var7];
 					}
 					byte var22 = getIndex(var20);
 					byte var23 = getIndex(var21);
@@ -635,9 +658,9 @@ public class WordFilter {
 					int var32 = 0;
 					int var33 = -1;
 					for (int var34 = var6; var34 < var7; var34++) {
-						if (isNumber(arg0[var34])) {
+						if (isNumber(arg1[var34])) {
 							var31++;
-						} else if (isAlpha(arg0[var34])) {
+						} else if (isAlpha(arg1[var34])) {
 							var32++;
 							var33 = var34;
 						}
@@ -646,13 +669,34 @@ public class WordFilter {
 						var31 -= var7 - var33 + 1;
 					}
 					if (var31 <= var32) {
-						for (int var35 = var6; var35 < var7; var35++) {
-							arg0[var35] = '*';
+						if (!isWhitelisted(arg1, var6, var7)) {
+							for (int var35 = var6; var35 < var7; var35++) {
+								arg1[var35] = '*';
+							}
 						}
 					}
 				}
 			}
 		}
+	}
+
+	public static boolean isWhitelisted(char[] arg0, int start, int end) {
+		for (String allowed : ALLOWLIST) {
+			if (end - start != allowed.length()) {
+				continue;
+			}
+			boolean match = true;
+			for (int i = 0; i < allowed.length(); i++) {
+				if (arg0[start + i] != allowed.charAt(i)) {
+					match = false;
+					break;
+				}
+			}
+			if (match) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@ObfuscatedName("sc.a(BI[[BB)Z")
