@@ -4343,14 +4343,23 @@ public class Client extends GameShell {
 						}
 						if (var2 == 13 || var2 == 10) {
 							if (this.chatbackInput.length() > 0) {
-								int var12 = 0;
-								try {
-									var12 = Integer.parseInt(this.chatbackInput);
-								} catch (Exception var17) {
+								if (this.chatbackInputType == 0) {
+									int var12 = 0;
+									try {
+										var12 = Integer.parseInt(this.chatbackInput);
+									} catch (Exception var17) {
+									}
+									// RESUME_P_COUNTDIALOG
+									this.out.pIsaac(161);
+									this.out.p4(var12);
+								} else if (this.chatbackInputType == 1) {
+									// RESUME_P_STRINGDIALOG
+									this.out.pIsaac(63);
+									this.out.p1(0);
+									int start = this.out.pos;
+									this.out.pjstr(this.chatbackInput);
+									this.out.psize1(this.out.pos - start);
 								}
-								// RESUME_P_COUNTDIALOG
-								this.out.pIsaac(161);
-								this.out.p4(var12);
 							}
 							this.chatbackInputOpen = false;
 							this.redrawChatback = true;
@@ -6777,6 +6786,17 @@ public class Client extends GameShell {
 				// P_COUNTDIALOG
 				this.showSocialInput = false;
 				this.chatbackInputOpen = true;
+				this.chatbackInputType = 0;
+				this.chatbackInput = "";
+				this.redrawChatback = true;
+				this.ptype = -1;
+				return true;
+			}
+			if (this.ptype == 80) {
+				// P_STRINGDIALOG
+				this.showSocialInput = false;
+				this.chatbackInputOpen = true;
+				this.chatbackInputType = 1;
 				this.chatbackInput = "";
 				this.redrawChatback = true;
 				this.ptype = -1;
