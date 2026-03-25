@@ -2561,8 +2561,8 @@ public class Client extends GameShell {
 				this.loginMes1 = "Unable to connect.";
 				this.loginMes2 = "Login server offline.";
 			} else if (var8 == 9) {
-				this.loginMes1 = "Login limit exceeded.";
-				this.loginMes2 = "Too many connections from your address.";
+				this.loginMes1 = "Access Denied.";
+				this.loginMes2 = "Your name is not whitelisted.";
 			} else if (var8 == 10) {
 				this.loginMes1 = "Unable to connect.";
 				this.loginMes2 = "Bad session id.";
