@@ -4002,7 +4002,7 @@ public class Client extends GameShell {
 			return;
 		}
 		if (super.mouseClickX >= 6 && super.mouseClickX <= 106 && super.mouseClickY >= 467 && super.mouseClickY <= 499) {
-			this.chatPublicMode = (this.chatPublicMode + 1) % 4;
+			this.chatPublicMode = (this.chatPublicMode + 1) % 3;
 			this.redrawPrivacySettings = true;
 			this.redrawChatback = true;
 			// CHAT_SETMODE
@@ -4472,15 +4472,7 @@ public class Client extends GameShell {
 								} else {
 									this.addChat(localPlayer.name, 2, localPlayer.chatMessage);
 								}
-								if (this.chatPublicMode == 2) {
-									this.chatPublicMode = 3;
-									this.redrawPrivacySettings = true;
-									// CHAT_SETMODE
-									this.out.pIsaac(129);
-									this.out.p1(this.chatPublicMode);
-									this.out.p1(this.chatPrivateMode);
-									this.out.p1(this.chatTradeMode);
-								}
+								// no mode promotion needed - 3 states: All=0 Public=1 Hide=2
 							}
 							this.chatTyped = "";
 							this.redrawChatback = true;
@@ -5290,16 +5282,13 @@ public class Client extends GameShell {
 			this.imageBackbase1.plotSprite(0, 0);
 			this.fontPlain12.centreStringTag(16777215, 55, "Public chat", 28, true);
 			if (this.chatPublicMode == 0) {
-				this.fontPlain12.centreStringTag(65280, 55, "On", 41, true);
+				this.fontPlain12.centreStringTag(65280, 55, "All", 41, true);
 			}
 			if (this.chatPublicMode == 1) {
-				this.fontPlain12.centreStringTag(16776960, 55, "Friends", 41, true);
+				this.fontPlain12.centreStringTag(16776960, 55, "Public", 41, true);
 			}
 			if (this.chatPublicMode == 2) {
-				this.fontPlain12.centreStringTag(16711680, 55, "Off", 41, true);
-			}
-			if (this.chatPublicMode == 3) {
-				this.fontPlain12.centreStringTag(65535, 55, "Hide", 41, true);
+				this.fontPlain12.centreStringTag(16711680, 55, "Hide", 41, true);
 			}
 			this.fontPlain12.centreStringTag(16777215, 184, "Private chat", 28, true);
 			if (this.chatPrivateMode == 0) {
@@ -5717,7 +5706,7 @@ public class Client extends GameShell {
 						}
 					}
 				}
-				if (var3.chatMessage != null && (var2 >= this.playerCount || this.chatPublicMode == 0 || this.chatPublicMode == 3 || this.chatPublicMode == 1 && this.isFriend(((ClientPlayer) var3).name))) {
+				if (var3.chatMessage != null && (var2 >= this.playerCount || this.chatPublicMode == 0 || this.chatPublicMode == 1 && this.isFriend(((ClientPlayer) var3).name))) {
 					this.getOverlayPos(var3.height, var3);
 					if (this.projectX > -1 && this.chatCount < this.MAX_CHATS) {
 						this.chatWidth[this.chatCount] = this.fontBold12.stringWid(var3.chatMessage) / 2;
@@ -10723,7 +10712,7 @@ public class Client extends GameShell {
 						}
 						var3++;
 					}
-					if ((var5 == 1 || var5 == 2) && (var5 == 1 || this.chatPublicMode == 0 || this.chatPublicMode == 1 && this.isFriend(var7))) {
+				if ((var5 == 1 || var5 == 2) && (var5 == 1 || this.chatPublicMode == 0 || this.chatPublicMode == 1 && this.isFriend(var7))) {
 						if (var6 > 0 && var6 < 110) {
 							int var9 = 4;
 							if (var8 == 1) {
